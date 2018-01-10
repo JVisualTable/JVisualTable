@@ -53,6 +53,7 @@ import org.vt.locale.VTResourceBundle;
  */
 public class VisualTableUtil {
 
+    
     private static ResourceBundle bundle = ResourceManager
 	    .getBundle(VTResourceBundle.class);
 
@@ -273,11 +274,11 @@ public class VisualTableUtil {
     }
 
     /**
-     * 获取没有重复ID的告警，和有重复的告警
+     * remove repeat list
      * 
      * @param vecAlm
      *            vecAlm
-     * @return List<List<UserAlmBean>> 迟长固定为2
+     * @return List<List<UserAlmBean>>
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
@@ -312,11 +313,9 @@ public class VisualTableUtil {
 	    if (indexs.size() == 1) {
 		noRepeatList.add(batchBeans.get(indexs.get(0).intValue()));
 	    } else {
-		// 如果最后一个元素是修改，前面所有修改的动作都可以不执行，仅保留最后一次修改，如果前面有增加则默认保留增加属性为最后一次修改属性，如果没有增加，则保留最后一次修改
 		BatchBean lastBatchBean = batchBeans.get(indexs.get(indexs
 			.size() - 1));
 		if (lastBatchBean.getType() == OperaType.UPDATE) {
-		    // 前面是否有新增
 		    boolean isNowAdd = false;
 		    for (int i = 0; i < indexs.size() - 1; i++) {
 			BatchBean frontBatchBean = batchBeans
@@ -326,7 +325,6 @@ public class VisualTableUtil {
 			}
 		    }
 		    if (isNowAdd) {
-			// 将最后的修改直接改为新增,并只保留一个新增
 			lastBatchBean.setType(OperaType.ADD);
 		    }
 		}
@@ -339,7 +337,6 @@ public class VisualTableUtil {
     public static <T> List<List<BatchBean<T>>> subListForBatchSingle(
 	    List<BatchBean<T>> batchBeans) {
 	List<List<BatchBean<T>>> lists = new ArrayList<List<BatchBean<T>>>();
-	// 没有重复的，则单独分成三个队列做批量调用，不需要有先后顺序
 	List<BatchBean<T>> addList = new ArrayList<BatchBean<T>>();
 	List<BatchBean<T>> updateList = new ArrayList<BatchBean<T>>();
 	List<BatchBean<T>> removeList = new ArrayList<BatchBean<T>>();
